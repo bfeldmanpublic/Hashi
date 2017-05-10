@@ -1,0 +1,53 @@
+{
+  "variables": {
+    "aws_access_key": "AKIAIVQGTFOFKTBNOMUQ",
+    "aws_secret_key": "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"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-east-1",
+    "source_ami": "ami-fce3c696",
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "RubyRedisNginx_Test {{timestamp}}"
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "inline": [
+      "sleep 30",
+      "sudo apt-get update",
+      "sudo apt-get install -y redis-server",
+      "sudo apt-get install -y nginx",
+      "sudo apt-get install -y git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev nodejs",
+      "sudo apt-get install -y libgdbm-dev libncurses5-dev automake libtool bison libffi-dev",
+      "sudo apt-get install -y gnupg2",
+      "sudo apt-add-repository ppa:brightbox/ruby-ng",
+      "sudo apt-get update",
+      "sudo apt-get install -y ruby2.2 ruby2.2-dev",
+      "sudo apt-get install -y rubygems1.8",
+      "sudo gem install rails",
+      "sudo apt-get install -y unzip",
+      "sudo curl -sS https://releases.hashicorp.com/vault/0.7.2/vault_0.7.2_linux_amd64.zip?_ga=2.82687838.919177227.1494381763-1070846447.1491261524 > vault.zip",
+      "sudo unzip vault.zip",
+      "sudo mv vault /usr/local/bin/",
+      "sudo rm vault.zip",
+      "sudo curl -sS https://releases.hashicorp.com/consul/0.8.2/consul_0.8.2_linux_amd64.zip?_ga=2.177800229.1423712001.1494383567-1070846447.1491261524 > consul.zip",
+      "sudo unzip consul.zip",
+      "sudo mv consul /usr/local/bin/",
+      "sudo rm consul.zip",
+      "sudo curl -sSL https://releases.hashicorp.com/nomad/0.5.6/nomad_0.5.6_linux_amd64.zip > nomad.zip",
+      "sudo unzip nomad.zip",
+      "sudo rm nomad.zip",
+      "sudo chmod +x nomad",
+      "sudo mv nomad /usr/bin/nomad",
+      "sudo mkdir -p /etc/nomad.d",
+      "sudo chmod a+w /etc/nomad.d",
+      "sudo sed -i -e \"s/.*nomad.*/$(ip route get 1 | awk '{print $NF;exit}') nomad/\" /etc/hosts"
+
+      
+    ]
+  }],
+  "post-processors": ["vagrant"]
+}

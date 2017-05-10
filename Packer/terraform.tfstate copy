@@ -1,0 +1,170 @@
+{
+    "version": 3,
+    "terraform_version": "0.9.4",
+    "serial": 5,
+    "lineage": "be77f244-a8fb-4591-8e91-ed42fecac9d5",
+    "modules": [
+        {
+            "path": [
+                "root"
+            ],
+            "outputs": {},
+            "resources": {
+                "aws_instance.web1": {
+                    "type": "aws_instance",
+                    "depends_on": [],
+                    "primary": {
+                        "id": "i-035341a0a7ecee9b9",
+                        "attributes": {
+                            "ami": "ami-054f2513",
+                            "associate_public_ip_address": "false",
+                            "availability_zone": "us-east-1a",
+                            "disable_api_termination": "false",
+                            "ebs_block_device.#": "0",
+                            "ebs_optimized": "false",
+                            "ephemeral_block_device.#": "0",
+                            "iam_instance_profile": "",
+                            "id": "i-035341a0a7ecee9b9",
+                            "instance_state": "running",
+                            "instance_type": "t2.micro",
+                            "ipv6_address_count": "0",
+                            "ipv6_addresses.#": "0",
+                            "key_name": "AWSKeyPair",
+                            "monitoring": "false",
+                            "network_interface.#": "0",
+                            "network_interface_id": "eni-22fec9d4",
+                            "primary_network_interface_id": "eni-22fec9d4",
+                            "private_dns": "ip-10-0-1-142.ec2.internal",
+                            "private_ip": "10.0.1.142",
+                            "public_dns": "",
+                            "public_ip": "",
+                            "root_block_device.#": "1",
+                            "root_block_device.0.delete_on_termination": "true",
+                            "root_block_device.0.iops": "100",
+                            "root_block_device.0.volume_size": "8",
+                            "root_block_device.0.volume_type": "gp2",
+                            "security_groups.#": "0",
+                            "source_dest_check": "true",
+                            "subnet_id": "subnet-7a55af56",
+                            "tags.%": "1",
+                            "tags.Name": "Hashi_Web1",
+                            "tenancy": "default",
+                            "volume_tags.%": "0",
+                            "vpc_security_group_ids.#": "1",
+                            "vpc_security_group_ids.849454907": "sg-4bda6435"
+                        },
+                        "meta": {
+                            "schema_version": "1"
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "aws_instance.web2": {
+                    "type": "aws_instance",
+                    "depends_on": [],
+                    "primary": {
+                        "id": "i-074cd7d474dac9ddd",
+                        "attributes": {
+                            "ami": "ami-054f2513",
+                            "associate_public_ip_address": "false",
+                            "availability_zone": "us-east-1b",
+                            "disable_api_termination": "false",
+                            "ebs_block_device.#": "0",
+                            "ebs_optimized": "false",
+                            "ephemeral_block_device.#": "0",
+                            "iam_instance_profile": "",
+                            "id": "i-074cd7d474dac9ddd",
+                            "instance_state": "running",
+                            "instance_type": "t2.micro",
+                            "ipv6_address_count": "0",
+                            "ipv6_addresses.#": "0",
+                            "key_name": "AWSKeyPair",
+                            "monitoring": "false",
+                            "network_interface.#": "0",
+                            "network_interface_id": "eni-347508d0",
+                            "primary_network_interface_id": "eni-347508d0",
+                            "private_dns": "ip-10-0-2-102.ec2.internal",
+                            "private_ip": "10.0.2.102",
+                            "public_dns": "",
+                            "public_ip": "",
+                            "root_block_device.#": "1",
+                            "root_block_device.0.delete_on_termination": "true",
+                            "root_block_device.0.iops": "100",
+                            "root_block_device.0.volume_size": "8",
+                            "root_block_device.0.volume_type": "gp2",
+                            "security_groups.#": "0",
+                            "source_dest_check": "true",
+                            "subnet_id": "subnet-9f2790d7",
+                            "tags.%": "1",
+                            "tags.Name": "Hashi_Web2",
+                            "tenancy": "default",
+                            "volume_tags.%": "0",
+                            "vpc_security_group_ids.#": "1",
+                            "vpc_security_group_ids.849454907": "sg-4bda6435"
+                        },
+                        "meta": {
+                            "schema_version": "1"
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                },
+                "aws_instance.web3": {
+                    "type": "aws_instance",
+                    "depends_on": [],
+                    "primary": {
+                        "id": "i-0dfd2510d2914b131",
+                        "attributes": {
+                            "ami": "ami-054f2513",
+                            "associate_public_ip_address": "false",
+                            "availability_zone": "us-east-1c",
+                            "disable_api_termination": "false",
+                            "ebs_block_device.#": "0",
+                            "ebs_optimized": "false",
+                            "ephemeral_block_device.#": "0",
+                            "iam_instance_profile": "",
+                            "id": "i-0dfd2510d2914b131",
+                            "instance_state": "running",
+                            "instance_type": "t2.micro",
+                            "ipv6_address_count": "0",
+                            "ipv6_addresses.#": "0",
+                            "key_name": "AWSKeyPair",
+                            "monitoring": "false",
+                            "network_interface.#": "0",
+                            "network_interface_id": "eni-8c06ed57",
+                            "primary_network_interface_id": "eni-8c06ed57",
+                            "private_dns": "ip-10-0-3-241.ec2.internal",
+                            "private_ip": "10.0.3.241",
+                            "public_dns": "",
+                            "public_ip": "",
+                            "root_block_device.#": "1",
+                            "root_block_device.0.delete_on_termination": "true",
+                            "root_block_device.0.iops": "100",
+                            "root_block_device.0.volume_size": "8",
+                            "root_block_device.0.volume_type": "gp2",
+                            "security_groups.#": "0",
+                            "source_dest_check": "true",
+                            "subnet_id": "subnet-9942b2c3",
+                            "tags.%": "1",
+                            "tags.Name": "Hashi_Web3",
+                            "tenancy": "default",
+                            "volume_tags.%": "0",
+                            "vpc_security_group_ids.#": "1",
+                            "vpc_security_group_ids.849454907": "sg-4bda6435"
+                        },
+                        "meta": {
+                            "schema_version": "1"
+                        },
+                        "tainted": false
+                    },
+                    "deposed": [],
+                    "provider": ""
+                }
+            },
+            "depends_on": []
+        }
+    ]
+}
