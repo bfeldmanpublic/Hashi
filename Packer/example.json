@@ -1,7 +1,7 @@
 {
   "variables": {
-    "aws_access_key": "AKIAIVQGTFOFKTBNOMUQ",
-    "aws_secret_key": "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"
+    "aws_access_key": "",
+    "aws_secret_key": ""
   },
   "builders": [{
     "type": "amazon-ebs",
@@ -11,7 +11,7 @@
     "source_ami": "ami-fce3c696",
     "instance_type": "t2.micro",
     "ssh_username": "ubuntu",
-    "ami_name": "RubyRedisNginx_Test {{timestamp}}"
+    "ami_name": "RubyRedisNginx2_Test {{timestamp}}"
   }],
   "provisioners": [{
     "type": "shell",
