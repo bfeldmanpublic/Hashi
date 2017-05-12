@@ -14,6 +14,14 @@ resource "aws_vpc" "hashi_vpc"{
   }
 }
 
+resource "aws_internet_gateway" "gw" {
+  vpc_id = "${aws_vpc.hashi_vpc.id}"
+
+  tags {
+    Name = "HashiVPN_IGW"
+  }
+}
+
 
 resource "aws_subnet" "HashiWebnet_USE1a_Pub" {
   assign_ipv6_address_on_creation = "false"
@@ -76,16 +84,45 @@ resource "aws_instance" "web1" {
   subnet_id = "subnet-7a55af56"
   key_name = "AWSKeyPair"
 
-  connection {
-    user = "ubuntu"
-  }
 
   tags {
     Name = "Hashi_Web1"
+    consul = "tagged"
   }
 
-  provisioner "local-exec" {
-    command = "sudo echo '<h1>Welcome to Web 1!</h1>' >> /usr/share/nginx/html/index.html"
+  provisioner "remote-exec" {
+    inline = ["sudo chmod 777 /usr/share/nginx/html/index.html"]
+  }
+
+  provisioner "file" {
+    source      = "files/index.html"
+    destination = "/usr/share/nginx/html/index.html"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["sudo mkdir -m 777 /etc/consul.d"]
+  }
+
+  provisioner "file" {
+    source      = "files/basic_config.json"
+    destination = "/etc/consul.d/basic_config.json"
+  }
+
+  provisioner "file" {
+    source      = "files/web.json"
+    destination = "/etc/consul.d/web.json"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["sudo nohup consul agent -config-dir=/etc/consul.d &",
+              "sleep 1"]
+  }
+
+  connection {
+    type     = "ssh"
+    user     = "ubuntu"
+    private_key = "${file("~/.ssh/personal/AWSKeyPair.pem")}"
+
   }
 
 }
@@ -98,16 +135,45 @@ resource "aws_instance" "web2" {
   subnet_id = "subnet-9f2790d7"
   key_name = "AWSKeyPair"
 
-  connection {
-    user = "ubuntu"
-  }
 
   tags {
     Name = "Hashi_Web2"
+    consul = "tagged"
   }
 
-  provisioner "local-exec" {
-    command = "sudo echo '<h1>Welcome to Web 2!</h1>' >> /usr/share/nginx/html/index.html"
+  provisioner "remote-exec" {
+    inline = ["sudo chmod 777 /usr/share/nginx/html/index.html"]
+  }
+
+  provisioner "file" {
+    source      = "files/index.html"
+    destination = "/usr/share/nginx/html/index.html"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["sudo mkdir -m 777 /etc/consul.d"]
+  }
+
+  provisioner "file" {
+    source      = "files/basic_config_server.json"
+    destination = "/etc/consul.d/basic_config_server.json"
+  }
+
+  provisioner "file" {
+    source      = "files/web.json"
+    destination = "/etc/consul.d/web.json"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["sudo nohup consul agent -config-dir=/etc/consul.d &",
+              "sleep 1"]
+  }
+
+
+  connection {
+    type     = "ssh"
+    user     = "ubuntu"
+    private_key = "${file("~/.ssh/personal/AWSKeyPair.pem")}"
   }
 
 }
@@ -120,16 +186,44 @@ resource "aws_instance" "web3" {
   subnet_id = "subnet-9942b2c3"
   key_name = "AWSKeyPair"
 
-  connection {
-    user = "ubuntu"
-  }
 
   tags {
     Name = "Hashi_Web3"
+    consul = "tagged"
   }
 
-  provisioner "local-exec" {
-    command = "sudo echo '<h1>Welcome to Web 3!</h1>' >> /usr/share/nginx/html/index.html"
+  provisioner "remote-exec" {
+    inline = ["sudo chmod 777 /usr/share/nginx/html/index.html"]
+  }
+
+  provisioner "file" {
+    source      = "files/index.html"
+    destination = "/usr/share/nginx/html/index.html"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["sudo mkdir -m 777 /etc/consul.d"]
+  }
+
+  provisioner "file" {
+    source      = "files/basic_config.json"
+    destination = "/etc/consul.d/basic_config.json"
+  }
+
+  provisioner "file" {
+    source      = "files/web.json"
+    destination = "/etc/consul.d/web.json"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["sudo nohup consul agent -config-dir=/etc/consul.d &",
+              "sleep 1"]
+  }
+
+  connection {
+    type     = "ssh"
+    user     = "ubuntu"
+    private_key = "${file("~/.ssh/personal/AWSKeyPair.pem")}"
   }
 
 }
@@ -142,12 +236,60 @@ resource "aws_instance" "app2" {
   subnet_id = "subnet-962493de"
   key_name = "AWSKeyPair"
 
-  connection {
-    user = "ubuntu"
-  }
 
   tags {
     Name = "Hashi_App2"
+    consul = "tagged"
   }
 
+
+
+}
+
+resource "aws_alb" "HashiALB1" {
+  name            = "HashiALB1"
+  internal        = false
+  security_groups = ["sg-4bda6435"]
+  subnets         = ["${aws_subnet.HashiWebnet_USE1a_Pub.id}",
+                      "${aws_subnet.HashiWebnet_USE1b_Pub.id}",
+                      "${aws_subnet.HashiWebnet_USE1c_Pub.id}"]
+
+  enable_deletion_protection = true
+
+}
+
+
+resource "aws_alb_target_group" "WebTargetGroup" {
+  name     = "HashiWebTargetGroup"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = "${aws_vpc.hashi_vpc.id}"
+}
+
+resource "aws_alb_listener" "front_end"{
+  load_balancer_arn = "${aws_alb.HashiALB1.arn}"
+  port = "80"
+  protocol = "HTTP"
+  default_action {
+    target_group_arn = "${aws_alb_target_group.WebTargetGroup.arn}"
+    type             = "forward"
+  }
+}
+
+resource "aws_alb_target_group_attachment" "alb1" {
+  target_group_arn = "${aws_alb_target_group.WebTargetGroup.arn}"
+  target_id        = "${aws_instance.web1.id}"
+  port             = 80
+}
+
+resource "aws_alb_target_group_attachment" "alb2" {
+  target_group_arn = "${aws_alb_target_group.WebTargetGroup.arn}"
+  target_id        = "${aws_instance.web2.id}"
+  port             = 80
+}
+
+resource "aws_alb_target_group_attachment" "alb3" {
+  target_group_arn = "${aws_alb_target_group.WebTargetGroup.arn}"
+  target_id        = "${aws_instance.web3.id}"
+  port             = 80
 }

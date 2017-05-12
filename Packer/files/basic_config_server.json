@@ -5,6 +5,11 @@
   "server": true,
   "bootstrap_expect": 1,
   "client_addr": "0.0.0.0",
-  "retry_join": ["10.0.5.57", "10.0.1.237", "10.0.1.234"],
   "ui": true,
+  "retry_join_ec2": {
+       "tag_key": "consul",
+       "tag_value": "tagged",
+       "access_key_id": "",
+       "secret_access_key": "" 
+  }
 }
